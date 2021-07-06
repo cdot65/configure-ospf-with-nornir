@@ -1,20 +1,19 @@
 from nornir_pyez.plugins.tasks import pyez_config, pyez_diff, pyez_commit
-import os
 from nornir import InitNornir
-from nornir.core.task import Task, Result
 from nornir_utils.plugins.functions import print_result
-from nornir_utils.plugins.tasks.data import load_yaml
 from rich import print
 
-script_dir = os.path.dirname(os.path.realpath(__file__))
+nr = InitNornir(config_file="config.yaml")
 
-nr = InitNornir(config_file=f"{script_dir}/config.yaml")
+def configure_ospf(task):
 
-def template_config(task):
-    # retrieve data from groups.yml
+    # pass in variables from inventory file
     data = {}
     data['ospf'] = task.host['ospf']
     print(data)
+
+    # execute our task by templating our variables through a Jinja2 template to produce config
+    # push and commit
     response = task.run(
         task=pyez_config, template_path='templates/ospf.j2', template_vars=data, data_format='set')
     if response:
@@ -23,6 +22,6 @@ def template_config(task):
         task.run(task=pyez_commit)
 
 
-response = nr.run(
-    task=template_config)
-print_result(response)
+if __name__ == "__main__":
+    response = nr.run(task=configure_ospf)
+    print_result(response)

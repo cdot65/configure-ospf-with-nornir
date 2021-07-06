@@ -67,56 +67,75 @@ Let's take a second to do a nice John Madden play-by-play on this script:
 ### Importing the functionality of PyEZ and Nornir into our script
 
 ```python
-from nornir_pyez.plugins.tasks import pyez_rpc
+from nornir_pyez.plugins.tasks import pyez_config, pyez_diff, pyez_commit
 from nornir import InitNornir
+from nornir_utils.plugins.functions import print_result
 from rich import print
-import os
 ```
 
-- We need to import the `pyez_rpc` method from Nornir's PyEZ plugin into our script
+- We need to import the PyEZ methods from Nornir's PyEZ plugin into our script
 - `InitNornir` will import the core functionality of Nornir
 - `rich` will make things pretty when we print the output
-- `import os` is just to allow us to shortcut the path of your directory
+- `print_result` will enable us to print the results of the task
 
 ### Defining parameters
 
 ```python
-script_dir = os.path.dirname(os.path.realpath(__file__))
-
-nr = InitNornir(config_file=f"{script_dir}/config.yaml")
-
-firewall = nr.filter(name="juniper-srx-garage0")
-
-extras = {
-    "less-than": "1"
-}
+nr = InitNornir(config_file="config.yaml")
 ```
 
-- create an object called `script_dir` and set it to our local directory
 - `nr` is created by instantiation the `InitNornir` class and passing our config file into it
-- we filter out a single device with the `nr.filter` method and passing a hostname
-- any extra parameters for our RPC call will be defined here in a key/value structure
 
-### Sending our API call
+### `configure_ospf` function
 
 ```python
-response = firewall.run(
-    task=pyez_rpc, func='get-security-policies-hit-count', extras=extras
-)
+def configure_ospf(task):
+
+    # pass in variables from inventory file
+    data = {}
+    data['ospf'] = task.host['ospf']
+    print(data)
 ```
 
-- create a new object called `response` and setting it equal to the response of our API call
-- the `run` function was imported when we created an object `firewall` based on the `InitNornir` class
-- within `run`, we pass the `task` as a `pyez_rpc`, our RPC API call, and `extra` parameters
-
-### Print
+- we pass the `task` object as a parameter into the `configure_ospf` function
+  - this will give us access to our device's `ospf` object (defined in the `inventory/inventory.yaml` file)
+- create a new object called `data` and setting it equal to the key/value pairs of `ospf` object
 
 ```python
-for dev in response:
-    print(response[dev].result)
+    # execute our task by templating our variables through a Jinja2 template to produce config
+    # push and commit
+    response = task.run(
+        task=pyez_config, template_path='templates/ospf.j2', template_vars=data, data_format='set')
 ```
 
-Loop over the `response` object, which is an AggregatedResult that behaves like a list. There is a response object for each device in inventory
+- create a new object called `response` and set it equal to the result of our task
+- the `run` method was imported when we created the `task` object from the `InitNornir` class
+- within `run`
+  - we pass the `task` as a `pyez_config`
+  - define the path to our Jinja2 template
+  - pass our variables
+  - declare that we want to send the box config in the format of `set` commands
+
+```python
+    if response:
+        diff = task.run(pyez_diff)
+    if diff:
+        task.run(task=pyez_commit)
+```
+
+- if there is a response, print the diff to the screen
+- if a diff exists, commit our changes
+
+### Execute our function
+
+```python
+if __name__ == "__main__":
+    response = nr.run(task=configure_ospf)
+    print_result(response)
+```
+
+- call our function within Python's `if __name__ == "__main__":` standard conditional
+- print the reponse to the screen
 
 ## 📸 Screenshot
 
