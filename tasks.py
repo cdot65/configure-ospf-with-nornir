@@ -19,7 +19,7 @@ from invoke import task
 ### DOCKER PARAMETERS
 ### ---------------------------------------------------------------------------
 DOCKER_IMG = "registry.gitlab.com/cremsburg/juniper-automation-container"
-DOCKER_TAG = "snmp_migrate"
+DOCKER_TAG = "configure_ospf"
 
 ### ---------------------------------------------------------------------------
 ### SYSTEM PARAMETERS
