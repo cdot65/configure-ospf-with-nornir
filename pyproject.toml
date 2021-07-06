@@ -1,0 +1,21 @@
+[tool.poetry]
+name = "jncip-sp-nornir"
+version = "0.1.0"
+description = "Configure SNMPv3 with the PyEZ plugin for Nornir"
+authors = ["Calvin Remsburg"]
+license = "Apache2.0"
+
+[tool.poetry.dependencies]
+python = "^3.8"
+junos-eznc = "^2.6.1"
+jxmlease = "^1.0.3"
+invoke = "^1.5.0"
+nornir = "^3.1.1"
+nornir-pyez = "^0.0.10"
+rich = "^10.4.0"
+
+[tool.poetry.dev-dependencies]
+
+[build-system]
+requires = ["poetry-core>=1.0.0"]
+build-backend = "poetry.core.masonry.api"

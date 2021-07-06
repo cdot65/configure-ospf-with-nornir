@@ -1,0 +1,9 @@
+{% for each in ospf.area %}
+{% for interface in each.interfaces %}
+{% if interface.interface_type is defined %}
+set protocols ospf area {{ each.name }} interface {{ interface.name }} interface-type {{ interface.interface_type }}
+{% elif interface.passive is defined %}
+set protocols ospf area {{ each.name }} interface {{ interface.name }} passive
+{% endif %}
+{% endfor %}
+{% endfor %}

@@ -1,0 +1,104 @@
+---
+clab-cbtjncip01-router1:
+    hostname: 172.21.20.6
+    groups:
+        - crpd
+    data:
+        ospf:
+            area:
+                - name: 0.0.0.1
+                  interfaces:
+                      - name: eth1
+                        interface_type: p2p
+                      - name: eth2
+                        passive: True
+                      - name: lo.0
+                        passive: True
+
+clab-cbtjncip01-router2:
+    hostname: 172.21.20.4
+    groups:
+        - crpd
+    data:
+        ospf:
+            area:
+                - name: 0.0.0.0
+                  interfaces:
+                      - name: eth3
+                        interface_type: p2p
+                      - name: eth2
+                        interface_type: p2p
+                      - name: lo.0
+                        passive: True
+                - name: 0.0.0.1
+                  interfaces:
+                      - name: eth1
+                        interface_type: p2p
+
+clab-cbtjncip01-router3:
+    hostname: 172.21.20.8
+    groups:
+        - crpd
+    data:
+        ospf:
+            area:
+                - name: 0.0.0.0
+                  interfaces:
+                      - name: eth1
+                        interface_type: p2p
+                      - name: eth2
+                        interface_type: p2p
+                      - name: lo.0
+                        passive: True
+
+clab-cbtjncip01-router4:
+    hostname: 172.21.20.3
+    groups:
+        - crpd
+    data:
+        ospf:
+            area:
+                - name: 0.0.0.0
+                  interfaces:
+                      - name: eth3
+                        interface_type: p2p
+                      - name: eth1
+                        interface_type: p2p
+                      - name: lo.0
+                        passive: True
+                - name: 0.0.0.2
+                  interfaces:
+                      - name: eth2
+                        interface_type: p2p
+
+clab-cbtjncip01-router5:
+    hostname: 172.21.20.9
+    groups:
+        - crpd
+    data:
+        ospf:
+            area:
+                - name: 0.0.0.2
+                  interfaces:
+                      - name: eth1
+                        interface_type: p2p
+                      - name: eth2
+                        interface_type: p2p
+                      - name: lo.0
+                        passive: True
+
+clab-cbtjncip01-router6:
+    hostname: 172.21.20.5
+    groups:
+        - crpd
+    data:
+        ospf:
+            area:
+                - name: 0.0.0.2
+                  interfaces:
+                      - name: eth1
+                        interface_type: p2p
+                      - name: eth2
+                        passive: True
+                      - name: lo.0
+                        passive: True
