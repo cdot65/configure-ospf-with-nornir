@@ -1,11 +1,10 @@
-# Juniper SNMP Migrations
+# Juniper Configure OSPF
 
 This example will show how to use the PyEZ plugin for Nornir to
 
 1. build a NETCONF connection to a remote device
-2. validate that SNMPv3 is not running
-3. configure SNMPv3 parameters
-4. close the connection
+2. configure OSPF
+3. close the connection
 
 ## 🚀 Workflow
 
